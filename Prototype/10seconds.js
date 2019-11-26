@@ -1,8 +1,9 @@
-let myFont, tick, nineSprite;
+let myFont, mySound;
 //let baby, burger, dead, google, lipstick, mail, nike, ring, star;
 let babies, burges, deads, googles, lipsticks, mails, nikes, rings, stars;
 function preload() {
 	myFont = loadFont('Quicksand-Regular.otf');
+	mySound = loadSound('clock.wav');
 }
 function setup() {
 	createCanvas(screen.width,screen.height);
@@ -96,17 +97,16 @@ function draw(){
 	//this is the code for the home screen or default part of the experience.
 	//it plays the clock sound and shows the animated clock until the user clicks to start.
 	let time = millis();
+	mySound.setVolume(0.2);
+	mySound.loop(); // this should loop the ticking sound but its not working at the moment
 	if (time < 10000) {
 		fill(0);
 		text('This is what happens every 10 seconds',width/2,500);
 		stroke(0);
-		if (time > 10000) {
-			//tick.play();
-		}
-	} else if (time <20000) {
+		
+	} else if (time <20000) {//this time conditions control the pace in which the facts are shown i.e. every second
 		background(255);
-		//makes the baby animation play
-		//animation(baby, width/2, height/3,300,300);
+		//makes the baby animation play and displays the fact
 		seen(babies);
 		myMove(babies);
 		fill(0);
@@ -114,17 +114,15 @@ function draw(){
 		text('43 babies are born',width/2,500);
 	} else if (time < 30000) {
 		unseen(babies);
-		//makes the emails animation play
+		//makes the emails animation play and displays the fact
 		fill(0);
 		textSize(width/20);
 		seen(mails);
 		myMove(mails);
-		//animation(mail, width/2, height/3,300,300);
 		text('24,378,590 emails are sent',width/2,500);
 	} else if (time < 40000) {
 		unseen(mails);
-		//makes the burger animation play
-		//animation(burger, width/2, height/3,300,300);
+		//makes the burger animation play and displays the fact
 		seen(burgers);
 		myMove(burgers);
 		fill(0);
@@ -132,8 +130,7 @@ function draw(){
 		text('750 McDonalds Burgers are eaten',width/2,500);
 	} else if (time < 50000) {
 		unseen(burgers);
-		//makes the rings animation play
-		//animation(ring, width/2, height/3,300,300);
+		//makes the rings animation play and displays the fact
 		seen(rings);
 		myMove(rings);
 		fill(0);
@@ -141,8 +138,7 @@ function draw(){
 		text('9 weddings take place',width/2,500);
 	} else if (time < 60000) {
 		unseen(rings);
-		//makes the grave animation play
-		//animation(dead, width/2, height/3,300,300);
+		//makes the grave animation play and displays the fact
 		seen(deads);
 		myMove(deads);
 		fill(0);
@@ -150,8 +146,7 @@ function draw(){
 		text('18 people die',width/2,500);
 	} else if (time < 70000) {
 		unseen(deads);
-		//makes the google animation play
-		//animation(google, width/2, height/3,300,300);
+		//makes the google animation play and displays the fact
 		seen(googles);
 		myMove(googles);
 		fill(0);
@@ -159,8 +154,7 @@ function draw(){
 		text('30,000,000 Google searches are made',width/2,500);
 	} else if (time < 80000) {
 		unseen(googles);
-		//makes the lipstick animation play
-		//animation(lipstick, width/2, height/3,300,300);
+		//makes the lipstick animation play and displays the fact
 		seen(lipsticks);
 		myMove(lipsticks);
 		fill(0);
@@ -168,8 +162,7 @@ function draw(){
 		text('600 lipsticks are produced',width/2,500);
 	} else if (time < 90000) {
 		unseen(lipsticks)
-		//makes the nike animation play
-		//animation(nike, width/2, height/3,300,300);
+		//makes the nike animation play and displays the fact
 		seen(nikes);
 		myMove(nikes);
 		fill(0);
@@ -177,8 +170,7 @@ function draw(){
 		text('Nike earns $6000',width/2,500);
 	} else if (time < 100000) {
 		unseen(nikes);
-		//makes the stars animation play
-		//animation(star, width/2, height/3,300,300);
+		//makes the stars animation play and displays the fact
 		seen(stars);
 		myMove(stars);
 		fill(0);
@@ -197,7 +189,6 @@ function draw(){
 		}
 	}
 	time = 0;
-	//tick.stop;
 	drawSprites();
 }
 function mousePressed() {

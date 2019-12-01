@@ -1,15 +1,23 @@
-let myFont, mySound;
-//let baby, burger, dead, google, lipstick, mail, nike, ring, star;
-let babies, burges, deads, googles, lipsticks, mails, nikes, rings, stars;
+let myFont, mySound, wide, tall;
+let babies, burgers, deads, googles, lipsticks, mails, nikes, rings, stars;
+let clockTick;
 function preload() {
 	myFont = loadFont('Quicksand-Regular.otf');
 	mySound = loadSound('clock.wav');
 }
 function setup() {
 	createCanvas(screen.width,screen.height);
+	//sets the font and the size and the alignment of all of the text
 	textFont(myFont);
 	textSize(width/20);
 	textAlign(CENTER, CENTER);
+	
+	//slows down the rate of the animations
+	frameRate(30);
+	
+	//this sets the volume of the ticking sound and plays it in a loop
+	mySound.setVolume(0.8);
+	mySound.loop(); 
 	
 	//this code creates a group for each animation
 	babies = new Group();
@@ -22,63 +30,68 @@ function setup() {
 	rings = new Group();
 	stars = new Group();
 	
+	clockTick = loadAnimation('clock1.png', 'clock8.png');
+	
 	//this adds the animations into sprites and to the groups
-	for (var i =0; i< 10; i++) {
-		//for the babies
+	for (var i =0; i< 40; i++) {
+		//creates a sprite for the babies
 		var newBaby = createSprite(random(width/3,2*(width/3)), random(200,height/3));
 		newBaby.addAnimation('dancing', 'baby1.png', 'baby4.png');
 		newBaby.visible = false;
-		//newBaby.setSpeed(random(2, 3), random(0, 360));
 		babies.add(newBaby);
-		//for the burgers
+		//creates a sprite for the burgers
 		var newBurger = createSprite(random(width/3,2*(width/3)), random(200,height/3));
 		newBurger.addAnimation('dancing', 'burger1.png', 'burger9.png');
 		newBurger.visible = false;
+		newBurger.setCollider('circle');
 		burgers.add(newBurger);
-		//for the graves
+		//creates a sprite for the graves
 		var newGrave = createSprite(random(width/3,2*(width/3)), random(200,height/3));
 		newGrave.addAnimation('dancing', 'dead1.png', 'dead6.png');
 		newGrave.visible = false;
 		deads.add(newGrave);
-		//for the google logo
+		//creates a sprite for the google logo
 		var newGoogle = createSprite(random(width/3,2*(width/3)), random(200,height/3));
 		newGoogle.addAnimation('dancing', 'google1.png', 'google5.png');
 		newGoogle.visible = false;
 		googles.add(newGoogle);
-		//for the lipsticks
+		//creates a sprite for the lipsticks
 		var newLipstick = createSprite(random(width/3,2*(width/3)), random(200,height/3));
 		newLipstick.addAnimation('dancing', 'lipstick1.png', 'lipstick5.png');
 		newLipstick.visible = false;
 		lipsticks.add(newLipstick);
-		//for the mail
+		//creates a sprite for the mail
 		var newMail = createSprite(random(width/3,2*(width/3)), random(200,height/3));
 		newMail.addAnimation('dancing', 'mail1.png', 'mail2.png');
 		newMail.visible = false;
 		mails.add(newMail);
-		//for the nikes
+		//creates a sprite for the nikes
 		var newNike = createSprite(random(width/3,2*(width/3)), random(200,height/3));
 		newNike.addAnimation('dancing', 'nike1.png', 'nike5.png');
 		newNike.visible = false;
 		nikes.add(newNike);
-		//for the rings
+		//creates a sprite for the rings
 		var newRing = createSprite(random(width/3,2*(width/3)), random(200,height/3));
 		newRing.addAnimation('dancing','ring1.png', 'ring2.png');
 		newRing.visible = false;
 		rings.add(newRing);
-		//for the stars
+		//creates a sprite for the stars
 		var newStar = createSprite(random(width/3,2*(width/3)), random(200,height/3));
 		newStar.addAnimation('dancing', 'star1.png', 'star4.png');
 		newStar.visible = false;
 		stars.add(newStar);
 	}
 }
-//this displays the groups when its their time
+//this displays the groups when its their time, and sets a collider so that they dont overlap
 function seen(group) {
 	for (var a = 0; a< group.length; a++) {
 		var b = group[a];
 		b.visible = true;
 		b.position.y += sin(frameCount/10);
+		b.setCollider('circle',0,0,100);
 	}
+	group.bounce(group);
+	myMove(group);
 }
 //this hides the groups once their time is up
 function unseen(group) {
@@ -88,27 +101,35 @@ function unseen(group) {
 	}
 }
 function myMove(group) {
-	var c = group[2];
+	var c = group[group.length-1];
 	c.position.x = mouseX;
 	c.position.y = mouseY;
 }
 function draw(){
 	background(255);
+	//This part displays the background animation
+
+	
 	//this is the code for the home screen or default part of the experience.
 	//it plays the clock sound and shows the animated clock until the user clicks to start.
 	let time = millis();
-	mySound.setVolume(0.2);
-	mySound.loop(); // this should loop the ticking sound but its not working at the moment
+	if (time %10) {
+		fill(0,100);
+		ellipse(width/2,height/2,wide,tall);
+		wide+=10;
+		tall+=10;
+	}
+	
 	if (time < 10000) {
+		animation(clockTick,width/2,height/3);
 		fill(0);
 		text('This is what happens every 10 seconds',width/2,500);
 		stroke(0);
 		
 	} else if (time <20000) {//this time conditions control the pace in which the facts are shown i.e. every second
-		background(255);
 		//makes the baby animation play and displays the fact
 		seen(babies);
-		myMove(babies);
+		//myMove(babies);
 		fill(0);
 		textSize(width/20);
 		text('43 babies are born',width/2,500);
@@ -180,17 +201,36 @@ function draw(){
 		unseen(stars);
 		fill(0);
 		textSize(width/20);
-		text('Start Again?',width/2,height/2);
-		if (key == "y" || key == "Y") {
-			time=0;
-		} else if (key == "n" || key == "N") {
-			text('Goodbye!',width/2,height/2);
-			background(255);
-		}
+		text('Refresh to Start Again',width/2,height/2);
+		background(0);
 	}
-	time = 0;
+	time = millis();
+	
+	//this part of the code ensures that all the sprites bounce at the screen edges, I got the code from the p5.play library examples
+  for(var i=0; i<allSprites.length; i++) {
+    var d = allSprites[i];
+    if(d.position.x<0) {
+      d.position.x = 1;
+      d.velocity.x = abs(d.velocity.x);
+    }
+
+    if(d.position.x>width) {
+      d.position.x = width-1;
+      d.velocity.x = -abs(d.velocity.x);
+    }
+
+    if(d.position.y<0) {
+      d.position.y = 1;
+      d.velocity.y = abs(d.velocity.y);
+    }
+
+    if(d.position.y>height) {
+      d.position.y = height-1;
+      d.velocity.y = -abs(d.velocity.y);
+    }
+  }
 	drawSprites();
 }
 function mousePressed() {
-	
+	//I am looking to make it a bit more interactive by adding some changes with mouse press.
 }
